@@ -17,7 +17,7 @@ html,body{margin:0;min-height:100%;background:#05020b;color:#fff;font-family:Int
     if(!('DecompressionStream' in window)) throw new Error('Ce navigateur doit être mis à jour.');
     const files=['v6/gzpart00.txt','v6/gzpart01.txt','v6/gzpart02.txt','v6/gzpart03.txt','v6/gzpart04.txt'];
     const parts=await Promise.all(files.map(async f=>{
-      const r=await fetch(f+'?v=6',{cache:'no-store'});
+      const r=await fetch(f+'?v=6.1',{cache:'no-store'});
       if(!r.ok) throw new Error('Fichier manquant : '+f);
       return (await r.text()).trim();
     }));
@@ -33,5 +33,6 @@ html,body{margin:0;min-height:100%;background:#05020b;color:#fff;font-family:Int
   }
 })();
 </script>
+<!-- force-pages-redeploy-2026-09-01 -->
 </body>
 </html>
