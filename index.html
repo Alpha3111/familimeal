@@ -6,33 +6,33 @@
 <meta name="theme-color" content="#05020b">
 <title>FamiliMeal</title>
 <style>
-html,body{margin:0;min-height:100%;background:#05020b;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}#load{min-height:100vh;display:grid;place-items:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 10%,rgba(155,92,255,.25),transparent 30%),#05020b}h1{letter-spacing:.12em;margin:0 0 8px}p,small{color:#b9a9ce}
+html,body{margin:0;min-height:100%;background:#05020b;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}#load{min-height:100vh;display:grid;place-items:center;text-align:center;padding:24px;background:radial-gradient(circle at 50% 10%,rgba(155,92,255,.25),transparent 30%),#05020b}h1{letter-spacing:.12em;margin:0 0 8px}p,small{color:#b9a9ce}.retry{margin-top:16px;padding:10px 16px;border:0;border-radius:12px;background:#8f5cff;color:white;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
-<div id="load"><div><h1>FAMILIMEAL</h1><p>Chargement de votre espace familial…</p></div></div>
+<div id="load"><div><h1>FamiliMeal</h1><p>Chargement de votre espace familial…</p></div></div>
 <script>
 (async()=>{
+  const base='https://raw.githubusercontent.com/Alpha3111/familimeal/main/v6/';
   try{
-    if(!('DecompressionStream' in window)) throw new Error('Ce navigateur doit être mis à jour.');
-    const files=['v6/gzpart00.txt','v6/gzpart01.txt','v6/gzpart02.txt','v6/gzpart03.txt','v6/gzpart04.txt'];
-    const parts=await Promise.all(files.map(async f=>{
-      const r=await fetch(f+'?v=6.1',{cache:'no-store'});
-      if(!r.ok) throw new Error('Fichier manquant : '+f);
-      return (await r.text()).trim();
-    }));
+    if(!('DecompressionStream' in window)) throw new Error('Votre navigateur ne prend pas en charge le chargement de l’application.');
+    const names=['gzpart00.txt','gzpart01.txt','gzpart02.txt','gzpart03.txt','gzpart04.txt'];
+    const parts=[];
+    for(const name of names){
+      let r;
+      try{ r=await fetch(base+name+'?v=7.1',{cache:'no-store'}); }catch(e){ throw new Error('Impossible de récupérer '+name); }
+      if(!r.ok) throw new Error(name+' : HTTP '+r.status);
+      parts.push((await r.text()).trim());
+    }
     const raw=atob(parts.join(''));
     const bytes=Uint8Array.from(raw,c=>c.charCodeAt(0));
     const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
     const html=await new Response(stream).text();
-    document.open();
-    document.write(html);
-    document.close();
+    document.open(); document.write(html); document.close();
   }catch(e){
-    document.getElementById('load').innerHTML='<div><h1>FamiliMeal</h1><p>Impossible de charger l’application.</p><small>'+String(e.message||e)+'</small></div>';
+    document.getElementById('load').innerHTML='<div><h1>FamiliMeal</h1><p>Impossible de charger l’application.</p><small>'+String(e.message||e)+'</small><br><button class="retry" onclick="location.reload()">Réessayer</button></div>';
   }
 })();
 </script>
-<!-- force-pages-redeploy-2026-09-01 -->
 </body>
 </html>
