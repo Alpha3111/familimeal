@@ -11,26 +11,26 @@ html,body{margin:0;min-height:100%;background:#05020b;color:#fff;font-family:Int
 </head>
 <body>
 <div id="load"><div><h1>FamiliMeal</h1><p>Chargement de votre espace familial…</p></div></div>
+<script src="v7/p0.js?v=7.2"></script>
+<script src="v7/p1.js?v=7.2"></script>
+<script src="v7/p2.js?v=7.2"></script>
+<script src="v7/p3.js?v=7.2"></script>
+<script src="v7/p4.js?v=7.2"></script>
 <script>
 (async()=>{
-  const base='https://raw.githubusercontent.com/Alpha3111/familimeal/main/v6/';
+  const load=document.getElementById('load');
   try{
-    if(!('DecompressionStream' in window)) throw new Error('Votre navigateur ne prend pas en charge le chargement de l’application.');
-    const names=['gzpart00.txt','gzpart01.txt','gzpart02.txt','gzpart03.txt','gzpart04.txt'];
-    const parts=[];
-    for(const name of names){
-      let r;
-      try{ r=await fetch(base+name+'?v=7.1',{cache:'no-store'}); }catch(e){ throw new Error('Impossible de récupérer '+name); }
-      if(!r.ok) throw new Error(name+' : HTTP '+r.status);
-      parts.push((await r.text()).trim());
-    }
-    const raw=atob(parts.join(''));
+    if(!window.__FMV7 || window.__FMV7.length!==5 || window.__FMV7.some(x=>!x)) throw new Error('Fichiers V7 incomplets.');
+    if(!('DecompressionStream' in window)) throw new Error('Ce navigateur doit être mis à jour pour charger FamiliMeal.');
+    const raw=atob(window.__FMV7.join(''));
     const bytes=Uint8Array.from(raw,c=>c.charCodeAt(0));
     const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
     const html=await new Response(stream).text();
-    document.open(); document.write(html); document.close();
+    document.open();
+    document.write(html);
+    document.close();
   }catch(e){
-    document.getElementById('load').innerHTML='<div><h1>FamiliMeal</h1><p>Impossible de charger l’application.</p><small>'+String(e.message||e)+'</small><br><button class="retry" onclick="location.reload()">Réessayer</button></div>';
+    load.innerHTML='<div><h1>FamiliMeal</h1><p>Impossible de charger l’application.</p><small>'+String(e.message||e)+'</small><br><button class="retry" onclick="location.reload()">Réessayer</button></div>';
   }
 })();
 </script>
